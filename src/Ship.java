@@ -1,7 +1,7 @@
-public class Ship {
+public class Ship extends GamePiece {
     private final String location;
     private final int length;
-    private boolean horizontal;
+    private final boolean horizontal;
     private int survivingUnits;
 
     public Ship(String location, int length, boolean horizontal){
@@ -17,5 +17,13 @@ public class Ship {
 
     public boolean isHorizontal(){
         return horizontal;
+    }
+
+    public void hitShip(){
+        survivingUnits--;
+
+        if(survivingUnits <= 0){
+            System.out.println("You sunk a battleship!");
+        }
     }
 }

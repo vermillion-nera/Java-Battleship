@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Cell {
+public class Cell extends GamePiece {
 
     private final int x;
     private final int y;
@@ -33,7 +33,7 @@ public class Cell {
     // Returns true if the action was successful; returns false otherwise.
     public boolean placeShip(Ship ship){
         if(hasShip){
-            System.out.println("Coordinate " + coordinateToString() + " already has a ship on it.");
+            System.out.println("Coordinate " + coordinateToString(x, y) + " already has a ship on it.");
             return false;
         }
 
@@ -49,19 +49,16 @@ public class Cell {
     // Returns true if the action was successful; returns false otherwise.
     public boolean setStruck(){
         if(struck){
-            System.out.println("Coordinate " + coordinateToString() + " already has been struck!");
+            System.out.println("Coordinate " + coordinateToString(x, y) + " already has been struck!");
             return false;
+        } else if (hasShip){
+            System.out.println("Hit!");
+            ship.hitShip();
+        } else {
+            System.out.println("Miss...");
         }
 
         struck = true;
         return true;
-    }
-
-    private String coordinateToString(){
-        return (char)(x + 65) + Integer.toString(y + 1);
-    }
-
-    public static int booleanToInt(boolean bool){
-        return bool ? 1 : 0;
     }
 }

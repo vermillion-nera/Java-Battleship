@@ -1,21 +1,21 @@
 public class Ship {
-    private int length;
-    private String location;
+    private final String location;
+    private final int length;
     private boolean horizontal;
-    private boolean sunk = false;
+    private int survivingUnits;
 
-    public Ship(){
-        length = 1;
-        horizontal = true;
-    }
-
-    public Ship(int length){
-        this.length = length;
-        horizontal = true;
-    }
-
-    public Ship(int length, boolean horizontal){
+    public Ship(String location, int length, boolean horizontal){
+        this.location = location;
         this.length = length;
         this.horizontal = horizontal;
+        survivingUnits = length;
+    }
+
+    public int getLength(){
+        return length;
+    }
+
+    public boolean isHorizontal(){
+        return horizontal;
     }
 }

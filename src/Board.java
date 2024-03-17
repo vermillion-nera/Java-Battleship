@@ -108,23 +108,40 @@ public class Board extends GamePiece {
 
     @Override
     public String toString(){
-        return ("Board of size " + grid.length + "*" + grid[0].length + " with " + ships.size() + " ships and " + shipUnitsRemaining() + " ship cells remaining.");
+        return ("Board with " + ships.size() + " ships and " + shipUnitsRemaining() + " ship cells remaining.");
     }
 
-    public String boardToString(){
-        StringBuilder output = new StringBuilder("- ");
-        for (int i = 0; i < grid.length; i++){
-            output.append((i + 1)).append(" ");
-        }
-        output.append("\n");
-
-        for (int i = 0; i < grid.length; i++) {
-            output.append(((char) (i + 65))).append(" ");
-            for (int j = 0; j < grid[i].length; j++) {
-                output.append(grid[i][j].getContents());
+    private String rowToString(int row, boolean shipsHidden){
+        StringBuilder output = new StringBuilder();
+        if(row == 0){
+            // Number labels at the top of each column
+            output.append("- ");
+            for (int i = 0; i < grid.length; i++){
+                output.append((i + 1)).append(" ");
             }
+        } else if (row <= grid.length) {
+            // Letter labels on the left side of each row
+            output.append(((char) (row + 64))).append(" ");
+            // Row contents
+            for (int i = 0; i < grid.length; i++) {
+                if(shipsHidden){
+                    output.append(grid[row - 1][i].getContentsHidden());
+                } else {
+                    output.append(grid[row - 1][i].getContents());
+                }
+            }
+        }
+
+        return output.toString();
+    }
+
+    public String boardToString(boolean shipsHidden){
+        StringBuilder output = new StringBuilder();
+        for(int i = 0; i <= grid.length; i++){
+            output.append(rowToString(i, shipsHidden));
             output.append("\n");
         }
+
         return output.toString();
     }
 
@@ -134,6 +151,25 @@ public class Board extends GamePiece {
             output.append(ship.toString());
             output.append("\n");
         }
+        return output.toString();
+    }
+
+    // This function generates a string that can be printed to show the current state of the game
+    // with `this` being the player's board and `other` being the opponent's board.
+    // Surviving ship units are hidden on the opponent's board.
+    // ------------------------------------------------------------------------------------------
+    // WARNING: While most other code was written to scale with different board sizes,
+    // this function designed to work specifically with 2 10*10 boards.
+    public String generateView(Board other){
+        StringBuilder output = new StringBuilder();
+        output.append("\t  YOUR BOARD\t\t\t|\t\t\tOPPONENT'S BOARD\t\t\n");
+        for(int i = 0; i <= grid.length; i++){
+            output.append(rowToString(i, false));
+            output.append("\t\t|\t\t");
+            output.append(other.rowToString(i, true));
+            output.append("\n");
+        }
+
         return output.toString();
     }
 }

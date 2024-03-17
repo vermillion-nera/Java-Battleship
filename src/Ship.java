@@ -1,13 +1,9 @@
 public class Ship extends GamePiece {
-    private final String location;
     private final int length;
-    private final boolean horizontal;
     private int survivingUnits;
 
-    public Ship(String location, int length, boolean horizontal){
-        this.location = location;
+    public Ship(int length){
         this.length = length;
-        this.horizontal = horizontal;
         survivingUnits = length;
     }
 
@@ -15,15 +11,20 @@ public class Ship extends GamePiece {
         return length;
     }
 
-    public boolean isHorizontal(){
-        return horizontal;
+    public int getSurvivingUnits(){
+        return survivingUnits;
     }
 
-    public void hitShip(){
-        survivingUnits--;
-
-        if(survivingUnits <= 0){
-            System.out.println("You sunk a battleship!");
+    public int hitShip(){
+        if(survivingUnits > 0){
+            survivingUnits--;
         }
+
+        return survivingUnits;
+    }
+
+    @Override
+    public String toString(){
+        return ("Ship " + length + " units long with " + survivingUnits + " units remaining.");
     }
 }

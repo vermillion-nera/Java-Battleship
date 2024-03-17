@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class Cell extends GamePiece {
 
     private final int x;
@@ -28,6 +26,13 @@ public class Cell extends GamePiece {
 
     public boolean hasShip(){
         return hasShip;
+    }
+
+    public Ship getShip(){
+        if(hasShip){
+            return ship;
+        }
+        return null;
     }
 
     // Returns true if the action was successful; returns false otherwise.
@@ -60,5 +65,10 @@ public class Cell extends GamePiece {
 
         struck = true;
         return true;
+    }
+
+    @Override
+    public String toString(){
+        return ("Cell " + coordinateToString(x, y) + " has " + (hasShip ? "a" : "no") + " ship and " + (struck ? "has" : "hasn't") + " been struck.");
     }
 }

@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 public class Board extends GamePiece {
     // A board's grid's rows should be labeled as LETTERS
     // Its columns should be labeled as NUMBERS
     Cell[][] grid;
+    ArrayList<Ship> ships = new ArrayList<>();
 
     public Board(){
         grid = new Cell[10][10];
@@ -37,7 +40,8 @@ public class Board extends GamePiece {
             }
         }
 
-        Ship ship = new Ship(location, length, horizontal);
+        Ship ship = new Ship(length);
+        ships.add(ship);
         // Place the ship pieces!
         for(int i = 0; i < ship.getLength(); i++){
             Cell cell = grid[coord[0] + (i * booleanToInt(!horizontal))][coord[1] + (i * booleanToInt(horizontal))];
@@ -49,6 +53,8 @@ public class Board extends GamePiece {
         return true;
     }
 
+    // Takes a Battleship coordinate and attempts to make a hit on the specified grid cell.
+    // Returns true if the action was successful; returns false otherwise.
     public boolean strikeBoard(String location){
         int[] coord = parseLocation(location);
         if(isInvalidCoordinate(coord)){
@@ -56,9 +62,29 @@ public class Board extends GamePiece {
         }
 
         assert coord != null;
-        return grid[coord[0]][coord[1]].setStruck();
+        Cell c = grid[coord[0]][coord[1]];
+        if(c.setStruck()){ // If the strike is successful
+            if(c.getShip() != null) { // Check if there is a ship on that cell
+                if (c.getShip().getSurvivingUnits() <= 0) { // If that cell contained the last surviving unit of the ship
+                    ships.remove(c.getShip()); // Sink the battleship.
+                    System.out.println("A battleship sank!");
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
+    // Crucial for determining the winner!
+    public int shipUnitsRemaining(){
+        int output = 0;
+        for(Ship ship : ships){
+            output += ship.getSurvivingUnits();
+        }
+        return output;
+    }
+
+    // Takes a string and ensures that it is in the format of a valid Battleship coordinate that is within the Board's boundaries.
     public boolean isInvalidCoordinate(String location){
         int[] coord = parseLocation(location);
         return isInvalidCoordinate(coord);
@@ -82,6 +108,10 @@ public class Board extends GamePiece {
 
     @Override
     public String toString(){
+        return ("Board of size " + grid.length + "*" + grid[0].length + " with " + ships.size() + " ships and " + shipUnitsRemaining() + " ship cells remaining.");
+    }
+
+    public String boardToString(){
         StringBuilder output = new StringBuilder("- ");
         for (int i = 0; i < grid.length; i++){
             output.append((i + 1)).append(" ");
@@ -93,6 +123,15 @@ public class Board extends GamePiece {
             for (int j = 0; j < grid[i].length; j++) {
                 output.append(grid[i][j].getContents());
             }
+            output.append("\n");
+        }
+        return output.toString();
+    }
+
+    public String shipsToString(){
+        StringBuilder output = new StringBuilder();
+        for(Ship ship : ships){
+            output.append(ship.toString());
             output.append("\n");
         }
         return output.toString();

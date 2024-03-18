@@ -3,7 +3,7 @@ public abstract class GamePiece {
     // Returns null if the action was unsuccessful.
     public static int[] parseLocation(String location){
         // Ensures that the input is in the format of a Battleship coordinate, I.E. B10
-        if(!location.matches("[A-Za-z][0-9]{1,2}")){
+        if(!location.matches("[A-Za-z][1-9]{1,2}")){
             System.out.println("Coordinates should be written as a letter followed by one or two digits, such as: D10");
             return null;
         }

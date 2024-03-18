@@ -44,17 +44,37 @@ public class Main {
                 }
 
                 case P1SETUP -> {
+                    Board b = player1.getBoard();
+                    b.addShip(4, "B4", true);
+//                    b.addShip(3, "D5", false);
+//                    b.addShip(5, "E7", false);
+//                    b.addShip(2, "J9", true);
+//                    b.strikeBoard("B2");
+//                    b.strikeBoard("E5");
+//                    b.strikeBoard("D5");
+//                    b.strikeBoard("F5");
+//                    b.strikeBoard("G5");
                     setupBoard(player1);
                     gameState = states.P2SETUP;
                 }
 
                 case P2SETUP -> {
+                    Board b2 = player2.getBoard();
+                    b2.addShip(5, "A4", true);
+//                    b2.addShip(4, "D3", false);
+//                    b2.addShip(3, "F4", true);
+//                    b2.addShip(2, "J9", true);
+//                    b2.strikeBoard("E9");
+//                    b2.strikeBoard("C4");
+//                    b2.strikeBoard("J1");
+//                    b2.strikeBoard("F4");
+//                    b2.strikeBoard("A7");
                     setupBoard(player2);
                     gameState = states.P1TURN;
                 }
 
                 case P1TURN -> {
-                    takeTurn(player1);
+                    takeTurn(player1, player2);
                     if(player2.checkLoss()){
                         gameState = states.END;
                         continue;
@@ -63,7 +83,7 @@ public class Main {
                 }
 
                 case P2TURN -> {
-                    takeTurn(player2);
+                    takeTurn(player2, player1);
                     if(player1.checkLoss()){
                         gameState = states.END;
                     }
@@ -77,8 +97,9 @@ public class Main {
         } while (gameActive);
     }
 
-    // Should ONLY be called once per player in the setup phases... Ideally with a blank board.
-    // Does what it says on the box.
+    // Should only be called once per player in the setup phases.
+    // Takes a player object and walks a human player through the process of populating that player
+    // object's board with ship pieces.
     private static void setupBoard(Player player) {
         // These are the lengths of the 5 ship pieces that come with a physical battleship game.
         int[] pieces = {5, 4, 3, 3, 2};
@@ -94,8 +115,8 @@ public class Main {
         System.out.println(player.getBoard().boardToString(false));
     }
 
-    // Takes a player object input and a piece length, and walks a human player through the inputs
-    // to place the piece on the player object's board. Cool stuff.
+    // Takes a player object and a piece length, and walks a human player through the process
+    // of placing the piece on the player object's board. Cool stuff.
     private static void manualPlaceShip(Player player, int piece){
         Scanner input = new Scanner(System.in);
         Board board = player.getBoard();
@@ -144,11 +165,38 @@ public class Main {
         } while (!board.addShip(piece, location, horizontal));
     }
 
-    private static void takeTurn(Player player) {
+    private static void takeTurn(Player player, Player opponent) {
+        Scanner input = new Scanner(System.in);
+        String target;
+        boolean targetUndecided = true;
+        Board board = player.getBoard();
+        Board opponentBoard = opponent.getBoard();
 
+        // Print a bunch of newlines so the player will not be able to see the previous player's actions.
+        for(int i = 0; i < 50; i++){
+            System.out.println();
+        }
+
+        // Hide the board until the intended player gives the OK
+        System.out.println(player.getName() + "'s turn!");
+        System.out.print("Press enter when ready.");
+        input.nextLine();
+
+        System.out.println();
+        System.out.println(board.generateView(opponentBoard));
+        do {
+            System.out.print("Enter a coordinate on your opponent's board to strike: ");
+            target = input.nextLine();
+            if(!opponentBoard.isInvalidCoordinate(target)){
+                if(opponentBoard.strikeBoard(target)){
+                    targetUndecided = false;
+                }
+            }
+        } while (targetUndecided);
+
+        // Show the results until the player gives the OK to hide them.
+        System.out.print("Press enter to end your turn.");
+        input.nextLine();
     }
 
-    private static void gameStep(){
-
-    }
 }

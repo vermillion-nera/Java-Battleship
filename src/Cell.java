@@ -1,5 +1,9 @@
 public class Cell extends GamePiece {
 
+    // This array is used to make displaying the state of a cell straightforward:
+    // The first dimension is whether the cell has a ship or not
+    // The second dimension is whether the cell has been struck or not
+    private static final String[][] possibleContents = new String[][]{{"~~", "><"},{"[]", "##"}};
     private final int x;
     private final int y;
     private boolean hasShip = false;
@@ -10,11 +14,6 @@ public class Cell extends GamePiece {
         this.x = x;
         this.y = y;
     }
-
-    // This array is used to make displaying the state of a cell straightforward:
-    // The first dimension is whether the cell has a ship or not
-    // The second dimension is whether the cell has been struck or not
-    private final String[][] possibleContents = new String[][]{{"~~", "><"},{"[]", "##"}};
 
     public String getContents(){
         return possibleContents[booleanToInt(hasShip)][booleanToInt(struck)];

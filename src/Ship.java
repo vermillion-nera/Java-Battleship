@@ -15,12 +15,10 @@ public class Ship extends GamePiece {
         return survivingUnits;
     }
 
-    public int hitShip(){
+    public void hitShip(){
         if(survivingUnits > 0){
             survivingUnits--;
         }
-
-        return survivingUnits;
     }
 
     @Override

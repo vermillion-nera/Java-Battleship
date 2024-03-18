@@ -87,7 +87,7 @@ public class Main {
         Board board = player.getBoard();
 
         boolean horizontal = false;
-        String location = "";
+        String location;
         do{
             boolean orientationUndecided = true;
             boolean locationUndecided = true;
@@ -96,7 +96,7 @@ public class Main {
 
             // --------------- Decide orientation -----------------
             do{
-                String str = "";
+                String str;
                 System.out.println("Should your " + piece + " long ship be vertical or horizontal?");
                 System.out.print("Input V for vertical, or H for horizontal: ");
                 str = input.nextLine();

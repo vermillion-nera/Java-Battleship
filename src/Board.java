@@ -84,7 +84,21 @@ public class Board extends GamePiece {
         return output;
     }
 
+    public Cell getCell(String location){
+        int[] coord = parseLocation(location);
+        if(isInvalidCoordinate(coord)){
+            return null;
+        }
+
+        assert coord != null;
+        return grid[coord[0]][coord[1]];
+    }
+
     // Takes a string and ensures that it is in the format of a valid Battleship coordinate that is within the Board's boundaries.
+    public boolean isValidCoordinate(String location){
+        return !isInvalidCoordinate(location);
+    }
+
     public boolean isInvalidCoordinate(String location){
         int[] coord = parseLocation(location);
         return isInvalidCoordinate(coord);
@@ -98,7 +112,7 @@ public class Board extends GamePiece {
         }
 
         // Check if the strike is actually in bounds
-        if(coord[0] >= grid.length || coord[1] >= grid[0].length){
+        if(coord[0] >= grid.length || coord[1] >= grid[0].length || coord[0] < 1 || coord[1] < 1){
             System.out.println("Coordinate " + coordinateToString(coord) + " is out of bounds of the board.");
             return true;
         }

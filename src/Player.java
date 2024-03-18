@@ -6,6 +6,11 @@ public class Player {
         this.board = new Board();
     }
 
+    Player (String name){
+        this.name = name;
+        this.board = new Board();
+    }
+
     public String getName() {
         return name;
     }

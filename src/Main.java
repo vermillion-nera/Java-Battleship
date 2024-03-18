@@ -1,25 +1,29 @@
 import java.util.Scanner;
 
 public class Main {
+    static Scanner input = new Scanner(System.in);
+
+    // QOL information trackers to display information to the player on their turn
+    static int turnCount = 0;
+    static String lastSquare;
+    static boolean shipStruck;
+    static boolean shipSank;
+
+    enum states {
+        START,
+        P1SETUP,
+        P2SETUP,
+        P1TURN,
+        P2TURN,
+        END
+    }
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-
-        // All possible states the game can be in at any given time.
-        enum states {
-            START,
-            P1SETUP,
-            P2SETUP,
-            P1TURN,
-            P2TURN,
-            END
-        }
-
-        states gameState= states.START;
+        states gameState = states.START;
         boolean gameActive = true;
-        boolean vsCPU = false;
 
         Player player1 = new Player();
         Player player2 = new Player();
+        Player winner = null;
 
         // Big ol' do-while loop. One iteration of this game loop should correspond to one in-game step or turn.
         // The value of `gameState` should change at some point over every iteration.
@@ -27,16 +31,16 @@ public class Main {
             switch (gameState){
                 case START -> {
                     System.out.println("\t\tJAVA BATTLESHIP");
-                    System.out.println("\t Written by Wren Caillouet");
+                    //System.out.println("\t Written by ");
                     System.out.println();
 
                     String name;
                     System.out.print("Enter a name for Player 1: ");
-                    name = input.nextLine();
+                    name = input.nextLine().trim();
                     player1.setName(name);
 
                     System.out.print("Enter a name for Player 2: ");
-                    name = input.nextLine();
+                    name = input.nextLine().trim();
                     player2.setName(name);
                     System.out.println();
 
@@ -45,37 +49,38 @@ public class Main {
 
                 case P1SETUP -> {
                     Board b = player1.getBoard();
-                    b.addShip(4, "B4", true);
+//                    b.addShip(4, "B4", true);
 //                    b.addShip(3, "D5", false);
 //                    b.addShip(5, "E7", false);
-//                    b.addShip(2, "J9", true);
+                    b.addShip(2, "J9", true);
 //                    b.strikeBoard("B2");
 //                    b.strikeBoard("E5");
 //                    b.strikeBoard("D5");
 //                    b.strikeBoard("F5");
 //                    b.strikeBoard("G5");
-                    setupBoard(player1);
+                    //setupBoard(player1);
                     gameState = states.P2SETUP;
                 }
 
                 case P2SETUP -> {
                     Board b2 = player2.getBoard();
-                    b2.addShip(5, "A4", true);
+//                    b2.addShip(5, "A4", true);
 //                    b2.addShip(4, "D3", false);
 //                    b2.addShip(3, "F4", true);
-//                    b2.addShip(2, "J9", true);
+                    b2.addShip(2, "J9", true);
 //                    b2.strikeBoard("E9");
 //                    b2.strikeBoard("C4");
 //                    b2.strikeBoard("J1");
 //                    b2.strikeBoard("F4");
 //                    b2.strikeBoard("A7");
-                    setupBoard(player2);
+                    //setupBoard(player2);
                     gameState = states.P1TURN;
                 }
 
                 case P1TURN -> {
                     takeTurn(player1, player2);
                     if(player2.checkLoss()){
+                        winner = player1;
                         gameState = states.END;
                         continue;
                     }
@@ -85,12 +90,30 @@ public class Main {
                 case P2TURN -> {
                     takeTurn(player2, player1);
                     if(player1.checkLoss()){
+                        winner = player2;
                         gameState = states.END;
+                        continue;
                     }
                     gameState = states.P1TURN;
                 }
 
                 case END -> {
+                    String str;
+
+                    System.out.println("\n\n----------- GAME OVER -----------");
+                    System.out.println(winner.getName() + " sunk all battleships and won!");
+                    System.out.println();
+
+                    System.out.print("Rematch? ");
+                    str = input.nextLine().trim();
+                    if(str.toLowerCase().contains("y")){
+                        player1 = new Player(player1.getName());
+                        player2 = new Player(player2.getName());
+                        turnCount = 0;
+                        gameState = states.P1SETUP;
+                        continue;
+                    }
+
                     gameActive = false;
                 }
             }
@@ -104,7 +127,13 @@ public class Main {
         // These are the lengths of the 5 ship pieces that come with a physical battleship game.
         int[] pieces = {5, 4, 3, 3, 2};
 
-        System.out.println("Setting up " + player.getName() + "'s board...");
+        // Print a bunch of newlines so the player will not be able to see the previous player's actions.
+        for(int i = 0; i < 40; i++){
+            System.out.println();
+        }
+
+        System.out.println(player.getName() + ", press enter to begin setting up your board.");
+        input.nextLine();
 
         for (int piece : pieces) {
             System.out.println("Next piece: " + piece + " long ship.");
@@ -113,12 +142,15 @@ public class Main {
 
         System.out.println("Final board: ");
         System.out.println(player.getBoard().boardToString(false));
+
+        // Show the results until the player gives the OK to hide them.
+        System.out.print("Press enter to finish setup.");
+        input.nextLine();
     }
 
     // Takes a player object and a piece length, and walks a human player through the process
     // of placing the piece on the player object's board. Cool stuff.
     private static void manualPlaceShip(Player player, int piece){
-        Scanner input = new Scanner(System.in);
         Board board = player.getBoard();
 
         boolean horizontal = false;
@@ -131,11 +163,12 @@ public class Main {
             System.out.println(board.boardToString(false));
 
             // --------------- Decide orientation -----------------
+            // Iterates until a valid input is made.
             do{
                 String str;
                 System.out.println("Should your " + piece + " long ship be vertical or horizontal?");
                 System.out.print("Input V for vertical, or H for horizontal: ");
-                str = input.nextLine();
+                str = input.nextLine().trim();
 
                 if(str.equalsIgnoreCase("V")){
                     orientationUndecided = false;
@@ -150,12 +183,13 @@ public class Main {
             } while (orientationUndecided);
 
             // --------------- Decide location -----------------
+            // Iterates until a valid input is made.
             do{
                 System.out.println("Where should the " + (horizontal ? "left" : "top") +" square of the ship be placed?");
                 System.out.print("Enter a coordinate: ");
-                location = input.nextLine();
+                location = input.nextLine().trim();
 
-                if(!board.isInvalidCoordinate(location)){
+                if(board.isValidCoordinate(location)){
                     locationUndecided = false;
                 }
 
@@ -166,14 +200,14 @@ public class Main {
     }
 
     private static void takeTurn(Player player, Player opponent) {
-        Scanner input = new Scanner(System.in);
+        turnCount++;
         String target;
         boolean targetUndecided = true;
         Board board = player.getBoard();
         Board opponentBoard = opponent.getBoard();
 
         // Print a bunch of newlines so the player will not be able to see the previous player's actions.
-        for(int i = 0; i < 50; i++){
+        for(int i = 0; i < 40; i++){
             System.out.println();
         }
 
@@ -182,14 +216,41 @@ public class Main {
         System.out.print("Press enter when ready.");
         input.nextLine();
 
+        // Show the board
         System.out.println();
         System.out.println(board.generateView(opponentBoard));
+
+        // QOL feature: Display data about the last turn for the current player.
+        if(turnCount > 1){ // At least one turn needs to occur to be able to display data
+            System.out.println("Your opponent struck square " + lastSquare + ".");
+            System.out.println("It was a " + (shipStruck ? "hit." : "miss."));
+            if(shipSank){
+                System.out.println("It sunk your battleship...");
+            }
+        }
+
+        // Main turn loop - iterates until a valid move is made.
         do {
             System.out.print("Enter a coordinate on your opponent's board to strike: ");
-            target = input.nextLine();
-            if(!opponentBoard.isInvalidCoordinate(target)){
+            target = input.nextLine().trim();
+            if(opponentBoard.isValidCoordinate(target)){
                 if(opponentBoard.strikeBoard(target)){
+                    // A successful strike was made on the board. Break out of the turn loop.
                     targetUndecided = false;
+
+                    // Collect data about the square that was hit to display to the next player.
+                    lastSquare = target.toUpperCase();
+                    Cell c = opponentBoard.getCell(lastSquare);
+
+                    if(c.hasShip()){
+                        shipStruck = true;
+                        if(c.getShip().getSurvivingUnits() <= 0){
+                            shipSank = true;
+                        }
+                    } else {
+                        shipStruck = false;
+                        shipSank = false;
+                    }
                 }
             }
         } while (targetUndecided);

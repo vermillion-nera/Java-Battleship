@@ -17,7 +17,7 @@ public class Board extends GamePiece {
     }
 
     // Returns true if the action was successful; returns false otherwise
-    public boolean addShip(String location, int length, boolean horizontal){
+    public boolean addShip( int length, String location, boolean horizontal){
         // Check if location input is a valid coordinate
         int[] coord = parseLocation(location);
         if(isInvalidCoordinate(coord)){
@@ -93,7 +93,7 @@ public class Board extends GamePiece {
     public boolean isInvalidCoordinate(int[] coord){
         // Check if location input is a valid coordinate
         if(coord == null){
-            System.out.print("Please enter a valid coordinate.");
+            System.out.println("Please enter a valid coordinate.");
             return true;
         }
 

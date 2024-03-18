@@ -1,3 +1,12 @@
+// ----------------------------------------------
+//              JAVA BATTLESHIP
+// ----------------------------------------------
+//  A faithful recreation of the Battleship board game,
+//  playable entirely within an IDE's output log.
+//
+//  Written by Wren Caillouet, 3/15/24 - 3/18/24
+
+
 import java.util.Scanner;
 
 public class Main {

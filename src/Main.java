@@ -31,7 +31,7 @@ public class Main {
             switch (gameState){
                 case START -> {
                     System.out.println("\t\tJAVA BATTLESHIP");
-                    //System.out.println("\t Written by ");
+                    System.out.println("\t Written by Wren");
                     System.out.println();
 
                     String name;
@@ -48,32 +48,12 @@ public class Main {
                 }
 
                 case P1SETUP -> {
-                    Board b = player1.getBoard();
-//                    b.addShip(4, "B4", true);
-//                    b.addShip(3, "D5", false);
-//                    b.addShip(5, "E7", false);
-                    b.addShip(2, "J9", true);
-//                    b.strikeBoard("B2");
-//                    b.strikeBoard("E5");
-//                    b.strikeBoard("D5");
-//                    b.strikeBoard("F5");
-//                    b.strikeBoard("G5");
-                    //setupBoard(player1);
+                    setupBoard(player1);
                     gameState = states.P2SETUP;
                 }
 
                 case P2SETUP -> {
-                    Board b2 = player2.getBoard();
-//                    b2.addShip(5, "A4", true);
-//                    b2.addShip(4, "D3", false);
-//                    b2.addShip(3, "F4", true);
-                    b2.addShip(2, "J9", true);
-//                    b2.strikeBoard("E9");
-//                    b2.strikeBoard("C4");
-//                    b2.strikeBoard("J1");
-//                    b2.strikeBoard("F4");
-//                    b2.strikeBoard("A7");
-                    //setupBoard(player2);
+                    setupBoard(player2);
                     gameState = states.P1TURN;
                 }
 

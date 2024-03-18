@@ -24,10 +24,12 @@ public class Cell extends GamePiece {
         return possibleContents[booleanToInt((hasShip && struck))][booleanToInt(struck)];
     }
 
+    // Returns whether the cell has a ship object on it at ALL (Not to be confused with getShip())
     public boolean hasShip(){
         return hasShip;
     }
 
+    // Returns the specific Ship object placed on the cell (Not to be confused with hasShip())
     public Ship getShip(){
         if(hasShip){
             return ship;

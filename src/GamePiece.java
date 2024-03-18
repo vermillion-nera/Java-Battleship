@@ -17,6 +17,7 @@ public abstract class GamePiece {
         return output;
     }
 
+    // Takes two integers as an input and rewrites them in the format of a Battleship coordinate: I.E. B7
     public static String coordinateToString(int x, int y){
         return (char)(x + 65) + Integer.toString(y + 1);
     }

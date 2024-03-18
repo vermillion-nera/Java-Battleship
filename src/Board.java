@@ -111,6 +111,9 @@ public class Board extends GamePiece {
         return ("Board with " + ships.size() + " ships and " + shipUnitsRemaining() + " ship cells remaining.");
     }
 
+    // Returns a String that represents a single row of the board's contents.
+    // Extremely useful for printing two boards adjacent to each other (see generateView());
+    // Setting shipsHidden to true will hide all ship units that have not yet been struck.
     private String rowToString(int row, boolean shipsHidden){
         StringBuilder output = new StringBuilder();
         if(row == 0){
@@ -135,6 +138,8 @@ public class Board extends GamePiece {
         return output.toString();
     }
 
+    // Returns a String that can be printed to show a visual representation of the board's contents, labels included.
+    // Setting shipsHidden to true will hide all ship units that have not yet been struck.
     public String boardToString(boolean shipsHidden){
         StringBuilder output = new StringBuilder();
         for(int i = 0; i <= grid.length; i++){
@@ -145,6 +150,7 @@ public class Board extends GamePiece {
         return output.toString();
     }
 
+    // Returns a String containing the description of every ship on the board.
     public String shipsToString(){
         StringBuilder output = new StringBuilder();
         for(Ship ship : ships){

@@ -164,16 +164,6 @@ public class Board extends GamePiece {
         return output.toString();
     }
 
-    // Returns a String containing the description of every ship on the board.
-    public String shipsToString(){
-        StringBuilder output = new StringBuilder();
-        for(Ship ship : ships){
-            output.append(ship.toString());
-            output.append("\n");
-        }
-        return output.toString();
-    }
-
     // This function generates a string that can be printed to show the current state of the game
     // with `this` being the player's board and `other` being the opponent's board.
     // Surviving ship units are hidden on the opponent's board.
@@ -187,6 +177,19 @@ public class Board extends GamePiece {
             output.append(rowToString(i, false));
             output.append("\t\t|\t\t");
             output.append(other.rowToString(i, true));
+            output.append("\n");
+        }
+
+        return output.toString();
+    }
+
+    public String generateGameOverView(Board other){
+        StringBuilder output = new StringBuilder();
+        output.append("\t\tPlayer 1\t\t\t|\t\t\t\tPlayer 2\n");
+        for(int i = 0; i <= grid.length; i++){
+            output.append(rowToString(i, false));
+            output.append("\t\t|\t\t");
+            output.append(other.rowToString(i, false));
             output.append("\n");
         }
 

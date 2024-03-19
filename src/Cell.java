@@ -48,10 +48,6 @@ public class Cell extends GamePiece {
         return true;
     }
 
-    public boolean isStruck(){
-        return struck;
-    }
-
     // Returns true if the action was successful; returns false otherwise.
     public boolean setStruck(){
         if(struck){

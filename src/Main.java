@@ -92,6 +92,7 @@ public class Main {
                     System.out.println("\n\n----------- GAME OVER -----------");
                     System.out.println(winner.getName() + " sunk all battleships and won!");
                     System.out.println();
+                    System.out.println(player1.getBoard().generateGameOverView(player2.getBoard()));
 
                     System.out.print("Rematch? ");
                     str = input.nextLine().trim();
@@ -231,14 +232,14 @@ public class Main {
                     lastSquare = target.toUpperCase();
                     Cell c = opponentBoard.getCell(lastSquare);
 
+                    shipStruck = false;
+                    shipSank = false;
+
                     if(c.hasShip()){
                         shipStruck = true;
                         if(c.getShip().getSurvivingUnits() <= 0){
                             shipSank = true;
                         }
-                    } else {
-                        shipStruck = false;
-                        shipSank = false;
                     }
                 }
             }

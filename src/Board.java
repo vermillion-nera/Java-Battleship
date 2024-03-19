@@ -112,7 +112,7 @@ public class Board extends GamePiece {
         }
 
         // Check if the strike is actually in bounds
-        if(coord[0] >= grid.length || coord[1] >= grid[0].length || coord[0] < 1 || coord[1] < 1){
+        if(coord[0] >= grid.length || coord[1] >= grid[0].length || coord[0] < 0 || coord[1] < 0){
             System.out.println("Coordinate " + coordinateToString(coord) + " is out of bounds of the board.");
             return true;
         }
